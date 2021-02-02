@@ -7,6 +7,7 @@ function totalAccountsCount(accounts) {
 }
 
 function booksBorrowedCount(books) {
+
   let partition = [];
   books.forEach((book) => {
     if (book.borrows[0].returned === false) {
@@ -17,10 +18,18 @@ function booksBorrowedCount(books) {
 }
 
 function getMostCommonGenres(books) {
-  let mostCommon = [];
+  
+
   let list = books.map((book) => book.genre);
-  let TheGenres = new Set(list);
+  let TheGenres = list.reduce((acc, genre)=>{
+    if(acc.indexOf(genre)===-1){
+      acc.push(genre)
+    }
+    return acc
+  },[])
+
   let values = [];
+
 
   TheGenres.forEach((genre) => {
     let count = 0;
@@ -32,14 +41,19 @@ function getMostCommonGenres(books) {
     values.push({ name: genre, count: count });
   });
 
-  mostCommon = values.sort((objA, objB) => {
+  console.log(values);
+
+ 
+  console.log(values);
+
+  values.sort((objA, objB) => {
     return objA.count > objB.count ? -1 : 1;
   });
 
-  while (mostCommon.length >= 6) {
-    mostCommon.pop();
+  while (values.length >= 6) {
+    values.pop();
   }
-  return mostCommon;
+  return values;
 }
 
 function getMostPopularBooks(books) {
@@ -54,14 +68,7 @@ function getMostPopularBooks(books) {
     count++;
   });
 
-  bestBooks.sort((objA, objB) => {
-    return objA.count > objB.count ? -1 : 1;
-  });
-
-  while (bestBooks.length >= 6) {
-    bestBooks.pop();
-  }
-  return bestBooks;
+  return format(bestBooks)
 }
 
 function getMostPopularAuthors(books, authors) {
@@ -75,13 +82,17 @@ function getMostPopularAuthors(books, authors) {
     }
   });
 
-  values.sort((objA, objB) => { // sort by values of property count 
+ return format(values)
+}
+
+function format(array){ /// help function to format the Most popluar lists
+  array.sort((objA, objB) => {
     return objA.count > objB.count ? -1 : 1;
   });
-  while (values.length >= 6) {
-    values.pop();
+  while (array.length >= 6) {
+    array.pop();
   }
-  return values;
+  return array
 }
 
 module.exports = {
